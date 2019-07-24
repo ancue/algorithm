@@ -175,6 +175,59 @@ class BiTree:
             return depth
 
     """
+    它是一棵空树或它的左右两个子树的高度差的绝对值不超过1，
+    并且左右两个子树都是一棵平衡二叉树。
+    
+    判断平衡二叉树
+    """
+    def isBalanced(self,root):
+        if root is None:
+            return True
+        # 从上到下比较左右子树的深度差是否大于1
+        if abs(self.get_depth(root.left) - self.get_depth(root.right)) > 1:
+            return False
+        return self.isBalanced(root.left) and self.isBalanced(root.right)
+
+    """
+    二叉树中和为某一值的路径
+    输入一颗二叉树和一个整数，打印出二叉树中结点值的和为输入整数的所有路径
+    """
+    def path(self,root,sum):
+        if not root :
+            return []
+
+        # 只要左右子节点有一个存在，就继续搜索
+        # 每加深一层，数组的维度会增加一，在后面会拼接，减少一个维度
+        if root.left is None and root.right is None:
+            if sum == root.val:
+                return [[root.val]]
+            else:
+                return []
+
+        # 从左到右，搜索值为差值的节点
+        a = self.path(root.left, sum - root.val) + self.path(root.right, sum - root.val)
+        return [[root.val] + i for i in a]
+
+    """
+    判断对称二叉树
+    """
+    def isSym(self,root):
+        return self.selfSym(root,root)
+
+    def selfSym(self,root1,root2):
+        if root1 is None and root2 is None:
+            return True
+
+        if root1 is None or root2 is None:
+            return False
+
+        if root1.val != root2.val:
+            return False
+
+        return self.selfSym(root1.left, root2.right) and self.selfSym(root1.right, root2.left)
+
+
+    """
     前序遍历， 方法如下： 
 
     1. 如果树为空，返回None 。 
@@ -308,6 +361,20 @@ class BiTree:
             self.ret.append(root.val)
         return self.ret
 
+    # 翻转二叉树（递归）
+    def inverseTree(self, root):
+        if root is None:
+            return
+
+        if root.left is None and root.right == None:
+            return root
+
+        # 从上到下，将左右子树翻转
+        root.left, root.right = root.right, root.left
+        self.inTraversal(root.left)
+        self.inTraversal(root.right)
+
+
     # 广度优先，层次遍历
     def levelTraversal(self, root):
         res = []
@@ -396,6 +463,47 @@ class BiTree:
         rtree = self.maxDepth(root.right)
 
         return max(ltree, rtree) + 1
+
+    # 重建二叉树
+    """
+    输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。
+    假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
+    例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
+    """
+    """
+    pre = [1, 2, 3, 5, 6, 4]
+    tin = [5, 3, 6, 2, 4, 1]
+    """
+
+    def reConstructBinaryTree(self, pre, tin):
+        if not pre and not tin:
+            return None
+        # 前序遍历的第一个是根节点
+        root = BiNode(pre[0])
+        if set(pre) != set(tin):
+            return None
+
+        i = tin.index(pre[0])
+        # 左子树
+        root.left = self.reConstructBinaryTree(pre[1:i + 1], tin[:i])
+        # 右子树
+        root.right = self.reConstructBinaryTree(pre[i + 1:], tin[i + 1:])
+        return root
+
+    """
+    按层序遍历，输出某一层的值
+    level 表示层数，边的数量
+    """
+
+    def PrintNodeAtLevel(self, BiNode, level):
+        if not BiNode or level < 0:
+            return 0
+        if level == 0:
+            print(BiNode.val)
+            return 1
+        # 先到达第level-1层，再从左到右打印
+        self.PrintNodeAtLevel(BiNode.left, level - 1)
+        self.PrintNodeAtLevel(BiNode.right, level - 1)
 
     """
     二叉搜索树(Binary Search Tree)，又名二叉排序树(Binary Sort Tree)。
