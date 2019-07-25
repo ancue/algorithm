@@ -123,30 +123,31 @@ class BiTree:
                     else:
                         right_node = BiNode(dict_in.get("right", None))
                     node.right = right_node
-
-    # 将二叉树转为字典
-    def pack_to_dict(self):
-        if self.root is None:
-            return None
-        else:
-            node_queue = list()
-            dict_queue = list()
-            node_queue.append(self.root)
-            dict_pack = self.root.dict_form()
-            dict_queue.append(dict_pack)
-
-            while len(node_queue):
-                q_node = node_queue.pop(0)
-                dict_get = dict_queue.pop(0)
-                if q_node.left is not None:
-                    node_queue.append(q_node.left)
-                    dict_get["left"] = q_node.left.dict_form()
-                    dict_queue.append(dict_get["left"])
-                if q_node.right is not None:
-                    node_queue.append(q_node.right)
-                    dict_get["right"] = q_node.right.dict_form()
-                    dict_queue.append(dict_get["right"])
-        return dict_pack
+    """
+        # 将二叉树转为字典
+        def pack_to_dict(self):
+            if self.root is None:
+                return None
+            else:
+                node_queue = list()
+                dict_queue = list()
+                node_queue.append(self.root)
+                dict_pack = self.root.dict_form()
+                dict_queue.append(dict_pack)
+    
+                while len(node_queue):
+                    q_node = node_queue.pop(0)
+                    dict_get = dict_queue.pop(0)
+                    if q_node.left is not None:
+                        node_queue.append(q_node.left)
+                        dict_get["left"] = q_node.left.dict_form()
+                        dict_queue.append(dict_get["left"])
+                    if q_node.right is not None:
+                        node_queue.append(q_node.right)
+                        dict_get["right"] = q_node.right.dict_form()
+                        dict_queue.append(dict_get["right"])
+            return dict_pack
+    """
 
     # 求二叉树的深度
     # 1.如果树为空，返回0 。
@@ -337,6 +338,27 @@ class BiTree:
             queue = next_queue
         return root
 
+    # 广度优先，层序遍历（迭代）
+    def level_traversal(self, root):
+        res = []
+        if root == None:
+            return res
+
+        l = []
+        l.append(root)
+        while len(l) > 0:
+            temp = []
+            for i in range(len(l)):
+                node = l[0]
+                del l[0]
+                temp.apped(node.left)
+                if node.left:
+                    l.append(node.left)
+                if node.right:
+                    l.append(node.right)
+            res.append(temp)
+        return res
+
     # 前序遍历（递归）
     def preorderTraversal(self, root):
         if root is not None:
@@ -375,26 +397,18 @@ class BiTree:
         self.inTraversal(root.right)
 
 
-    # 广度优先，层次遍历
-    def levelTraversal(self, root):
-        res = []
-        if root == None:
-            return res
+    # 广度优先，层次遍历（递归）
+    def levelTraversal(self,node, level):
+        sol = []
+        if not node:
+            return
+        else:
+            sol[level - 1].append(node.val)
+            if len(sol) == level:  # 遍历到新层时，只有最左边的结点使得等式成立
+                sol.append([])
+                self.levelTraversal(node.left, level + 1)
+                self.levelTraversal(node.right, level + 1)
 
-        l = []
-        l.append(root)
-        while len(l) > 0:
-            temp = []
-            for i in range(len(l)):
-                node = l[0]
-                del l[0]
-                temp.apped(node.left)
-                if node.left:
-                    l.append(node.left)
-                if node.right:
-                    l.append(node.right)
-            res.append(temp)
-        return res
 
     # 求叶子节点
     """

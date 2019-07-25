@@ -14,8 +14,47 @@ def twoSum(nums, target):
 
     return (-1, -1)
 
-
 print(twoSum([1, 4, 7, 9, 3], 7))
+
+# 三数之和
+"""
+给定一个包含 n 个整数的数组 nums，
+判断 nums 中是否存在三个元素 a，b，c ，
+使得 a + b + c = 0 ？找出所有满足条件且不重复的三元组。
+
+"""
+
+
+def threeSum(nums):
+    if nums is None or len(nums) < 3:
+        return []
+    if len(nums) == 3 and sum(nums) == 0:
+        return [sorted(nums)]
+
+    nums.sort()
+    result, length = [], len(nums)
+    for i in range(length - 2):
+        if i > 0 and nums[i - 1] == nums[i]:
+            continue
+
+        # i < l < r
+        l, r = i + 1, length - 1
+        while l < r:
+            sum = nums[i] + nums[l] + nums[r]
+            if sum == 0:
+                result.append([nums[i], nums[l], nums[r]])
+                while l < r and nums[l] == nums[l + 1]:
+                    l += 1
+                while l < r and nums[r] == nums[r - 1]:
+                    r -= 1
+            if sum > 0:
+                r -= 1
+            else:
+                l += 1
+    return result
+
+print(threeSum([1, 0, -1, 2, 3, -2]))
+
 
 # 121. 股票最大利润
 """
@@ -80,10 +119,6 @@ def maxProfit2(prices):
 输入字符串以字符数组 char[] 的形式给出。
 """
 
-# 堆排序top k
-
-# 有序链表合并
-
 # 8. 字符串转整数
 """
 假设我们的环境只能存储 32 位大小的有符号整数，那么其数值范围为 [−231,  231 − 1]。
@@ -120,41 +155,6 @@ def myAtoi(str):
         result = result * 10 + num
         pos += 1
     return sign * result
-
-
-# 15. 三数之和
-"""
-给定一个包含 n 个整数的数组 nums，
-判断 nums 中是否存在三个元素 a，b，c ，
-使得 a + b + c = 0 ？找出所有满足条件且不重复的三元组。
-"""
-
-
-def threeSum(nums):
-    res = []
-    nums.sort()
-    ls = len(nums)
-    for i in range(ls - 2):
-        if i > 0 and nums[i] == nums[i - 1]:
-            continue
-        j = i + 1
-        k = ls - 1
-        while j < k:
-            curr = nums[i] + nums[j] + nums[k]
-            if curr == 0:
-                res.append([nums[i], nums[j], nums[k]])
-                while j < k and nums[j] == nums[j + 1]:
-                    j += 1
-                while j < k and nums[k] == nums[k - 1]:
-                    k -= 1
-                j += 1
-                k -= 1
-            elif curr < 0:
-                j += 1
-            else:
-                k -= 1
-    return res
-
 
 # 26. 删除数组中重复的数
 """
@@ -216,13 +216,3 @@ def maxSubArray(nums):
         maxsum = max(maxsum, sum)
     return maxsum
 
-"""
-蓄水池抽样算法:在不知道长度的情况下，等概率随机抽样的方法。
-
-"""
-# 398. 随机数索引
-"""
-给定一个可能含有重复元素的整数数组，
-要求随机输出给定的数字的索引。 
-假设给定的数字一定存在于数组中。
-"""
