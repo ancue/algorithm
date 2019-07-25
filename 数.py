@@ -123,6 +123,8 @@ def getLeastNums(inputs, k):
         else:
             # 构造最大堆
             output = heapq.nlargest(k, output)
+            # 使用堆的目的是要知道序列中哪个值最大
+            # 每次都与最大的值比较，如果比最大值小就替换
             if num > output[0]:
                 continue
             else:
@@ -133,7 +135,8 @@ def getLeastNums(inputs, k):
 print('\ngetLeastNums')
 print(getLeastNums([], 2))
 print(getLeastNums([1, 2], 3))
-print(getLeastNums([3, 5, 1, 5, 2], 3))
+print(getLeastNums([3, 5,6,0,2, 1, 5, 2], 3))
+exit(0)
 
 '''
 33-丑数
