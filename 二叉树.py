@@ -215,23 +215,24 @@ class BiTree:
     """
 
     # 前序遍历（迭代）
-    def pre_traversal(self):
-        if self.root is None:
-            return None
-        else:
-            node_stack = list()
-            output_list = list()
-            node = self.root
-            while node is not None or len(node_stack):
-                if node is None:
-                    node = node_stack.pop().right
-                    continue
-                while node.left is not None:
-                    node_stack.append(node)
-                    output_list.append(node.get_element())
-                    node = node.left
-                output_list.append(node.get_element())
-                node = node.right
+    def pre_traversal(self, root):
+        if root is None:
+            return
+
+        node_stack, output_list, node = [], [], root
+        while node or len(node_stack):
+            if node is None:
+                node = node_stack.pop().right
+                continue
+
+            # 到达左子树的底部
+            while node.left:
+                node_stack.append(node.left)
+                output_list.append(node.val)
+                node = node.left
+
+            output_list.append(node.val)
+            node = node.right
         return output_list
 
     """
@@ -240,44 +241,44 @@ class BiTree:
     """
 
     # 中序遍历（迭代）
-    def in_traversal(self):
-        if self.root is None:
+    def in_traversal(self, root):
+        if root is None:
             return None
-        else:
-            node_stack = list()
-            output_list = list()
-            node = self.root
-            while node is not None or len(node_stack):
-                if node is None:
-                    node = node_stack.pop()
-                    output_list.append(node.get_element())
-                    node = node.right
-                    continue
-                while node.left is not None:
-                    node_stack.append(node)
-                    node = node.left
-                output_list.append(node.get_element())
+
+        node_stack, output_list, node = [], [], root
+        while node or len(node_stack):
+            if node is None:
+                node = node_stack.pop()
+                output_list.append(node.val)
                 node = node.right
+                continue
+
+            while node.left:
+                node_stack.append(node)
+                node = node.left
+
+            output_list.append(node.val)
+            node = node.right
         return output_list
 
     # 后序遍历（迭代）
-    def post_traversal(self):
-        if self.root is None:
+    def post_traversal(self, root):
+        if root is None:
             return None
-        else:
-            node_stack = list()
-            output_list = list()
-            node = self.root
-            while node is not None or len(node_stack):
-                if node is None:
-                    node = node_stack.pop().left
-                    continue
-                while node.right is not None:
-                    node_stack.append(node)
-                    output_list.append(node.get_element())
-                    node = node.right
-                output_list.append(node.get_element())
-                node = node.left
+
+        node_stack, output_list, node = [], [], root
+        while node or len(node_stack):
+            if node is None:
+                node = node_stack.pop().left
+                continue
+
+            while node.right:
+                node_stack.append(node)
+                output_list.append(node.val)
+                node = node.right
+
+            output_list.append(node.val)
+            node = node.left
         return output_list[::-1]
 
     # 翻转二叉树（迭代）
@@ -322,7 +323,7 @@ class BiTree:
 
     # 前序遍历（递归）
     def preorderTraversal(self, root):
-        if root is not None:
+        if root:
             self.ret.append(root.val)
             self.preorderTraversal(root.left)
             self.preorderTraversal(root.right)
@@ -330,7 +331,7 @@ class BiTree:
 
     # 中序遍历（递归）
     def inTraversal(self, root):
-        if root is not None:
+        if root:
             self.inTraversal(root.left)
             self.ret.append(root.val)
             self.inTraversal(root.right)
@@ -338,7 +339,7 @@ class BiTree:
 
     # 后续遍历（递归）
     def postTraversal(self, root):
-        if root is not None:
+        if root:
             self.postTraversal(root.left)
             self.postTraversal(root.right)
             self.ret.append(root.val)
@@ -349,26 +350,25 @@ class BiTree:
         if root is None:
             return
 
-        if root.left is None and root.right == None:
+        if root.left is None and root.right is None:
             return root
 
         # 从上到下，将左右子树翻转
         root.left, root.right = root.right, root.left
-        self.inTraversal(root.left)
-        self.inTraversal(root.right)
+        self.inverseTree(root.left)
+        self.inverseTree(root.right)
 
     # 广度优先，层次遍历（递归）
-    def levelTraversal(self, node, level):
-        sol = []
-        if not node:
+    def levelTraversal(self, root, level):
+        if not root:
             return
-        else:
-            sol[level - 1].append(node.val)
-            if len(sol) == level:  # 遍历到新层时，只有最左边的结点使得等式成立
-                sol.append([])
-                self.levelTraversal(node.left, level + 1)
-                self.levelTraversal(node.right, level + 1)
-
+        self.ret[level - 1].append(root.val)
+        if len(self.ret) == level:  # 遍历到新层时，只有最左边的结点使得等式成立
+            self.ret.append([])
+            if root.left:
+                self.levelTraversal(root.left, level + 1)
+            if root.right:
+                self.levelTraversal(root.right, level + 1)
 
     # 两个节点的最近公共祖先
     def lowestCommonAncestor(self, root, p, q):
