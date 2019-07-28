@@ -11,7 +11,6 @@ class BiNode(object):
         self.element = element
         self.left = left
         self.right = right
-        self.ret = []
 
     def get_element(self):
         return self.element
@@ -37,6 +36,7 @@ class BiNode(object):
 class BiTree:
     def __init__(self, tree_node=BiNode):
         self.root = tree_node
+        self.ret = []
 
     # 顺序构造二叉树，从上到下，从左到右
     def add_node_in_order(self, element):
@@ -123,6 +123,7 @@ class BiTree:
                     else:
                         right_node = BiNode(dict_in.get("right", None))
                     node.right = right_node
+
     """
         # 将二叉树转为字典
         def pack_to_dict(self):
@@ -149,39 +150,14 @@ class BiTree:
             return dict_pack
     """
 
-    # 求二叉树的深度
-    # 1.如果树为空，返回0 。
-    # 2.从根结点开始，将根结点拉入列。
-    # 3.当列非空，记当前队列元素数（上一层节点数）。
-    # 将上层节点依次出队，如果左右结点存在，依次入队。
-    # 直至上层节点出队完成，深度加一。
-    # 继续第三步，直至队列完全为空。
-    def get_depth(self):
-        if self.root is None:
-            return 0
-        else:
-            node_queue = list()
-            node_queue.append(self.root)
-            depth = 0
-            while len(node_queue):
-                q_len = len(node_queue)
-                while len(q_len):
-                    q_node = node_queue.pop(0)
-                    q_len = q_len - 1
-                    if q_node.left is not None:
-                        node_queue.append(q_node.left)
-                    if q_node.right is not None:
-                        node_queue.append(q_node.right)
-                depth += 1
-            return depth
-
     """
     它是一棵空树或它的左右两个子树的高度差的绝对值不超过1，
     并且左右两个子树都是一棵平衡二叉树。
     
     判断平衡二叉树
     """
-    def isBalanced(self,root):
+
+    def isBalanced(self, root):
         if root is None:
             return True
         # 从上到下比较左右子树的深度差是否大于1
@@ -193,8 +169,9 @@ class BiTree:
     二叉树中和为某一值的路径
     输入一颗二叉树和一个整数，打印出二叉树中结点值的和为输入整数的所有路径
     """
-    def path(self,root,sum):
-        if not root :
+
+    def path(self, root, sum):
+        if not root:
             return []
 
         # 只要左右子节点有一个存在，就继续搜索
@@ -212,10 +189,11 @@ class BiTree:
     """
     判断对称二叉树
     """
-    def isSym(self,root):
-        return self.selfSym(root,root)
 
-    def selfSym(self,root1,root2):
+    def isSym(self, root):
+        return self.selfSym(root, root)
+
+    def selfSym(self, root1, root2):
         if root1 is None and root2 is None:
             return True
 
@@ -226,7 +204,6 @@ class BiTree:
             return False
 
         return self.selfSym(root1.left, root2.right) and self.selfSym(root1.right, root2.left)
-
 
     """
     前序遍历， 方法如下： 
@@ -239,7 +216,6 @@ class BiTree:
 
     # 前序遍历（迭代）
     def pre_traversal(self):
-        """method of traversing BiTree in pre-order"""
         if self.root is None:
             return None
         else:
@@ -247,13 +223,9 @@ class BiTree:
             output_list = list()
             node = self.root
             while node is not None or len(node_stack):
-                # if node is None which means it comes from a leaf-node' right,
-                # pop the stack and get it's right node.
-                # continue the circulating like this
                 if node is None:
                     node = node_stack.pop().right
                     continue
-                #  save the front node and go next when left node exists
                 while node.left is not None:
                     node_stack.append(node)
                     output_list.append(node.get_element())
@@ -269,7 +241,6 @@ class BiTree:
 
     # 中序遍历（迭代）
     def in_traversal(self):
-        """method of traversing BiTree in in-order"""
         if self.root is None:
             return None
         else:
@@ -277,27 +248,20 @@ class BiTree:
             output_list = list()
             node = self.root
             while node is not None or len(node_stack):
-                # if node is None which means it comes from a leaf-node' right,
-                # pop the stack and get it's right node.
-                # continue the circulating like this
                 if node is None:
                     node = node_stack.pop()
-                    # in in-order traversal, when pop up a node from stack , save it
                     output_list.append(node.get_element())
                     node = node.right
                     continue
-                # go-next when left node exists
                 while node.left is not None:
                     node_stack.append(node)
                     node = node.left
-                # save the the last left node
                 output_list.append(node.get_element())
                 node = node.right
         return output_list
 
     # 后序遍历（迭代）
     def post_traversal(self):
-        """method of traversing BiTree in post-order"""
         if self.root is None:
             return None
         else:
@@ -305,9 +269,6 @@ class BiTree:
             output_list = list()
             node = self.root
             while node is not None or len(node_stack):
-                # if node is None which means it comes from a leaf-node' left,
-                # pop the stack and get it's left node.
-                # continue the circulating like this
                 if node is None:
                     node = node_stack.pop().left
                     continue
@@ -396,9 +357,8 @@ class BiTree:
         self.inTraversal(root.left)
         self.inTraversal(root.right)
 
-
     # 广度优先，层次遍历（递归）
-    def levelTraversal(self,node, level):
+    def levelTraversal(self, node, level):
         sol = []
         if not node:
             return
@@ -409,41 +369,6 @@ class BiTree:
                 self.levelTraversal(node.left, level + 1)
                 self.levelTraversal(node.right, level + 1)
 
-
-    # 求叶子节点
-    """
-    求叶子节点有两种方法
-    一种是广度搜索优先
-    即如果当前节点存在左右子树将左右子树入队
-    如果当前节点不存在子树，则该节点为叶节点
-    继续出队访问下一个节点。直至队列为空，这个方法留给读者去实现。
-
-    另外一种方法是，用深度搜索优先。
-    采用前序遍历，当判断到一个结点不存在左右子树时叶子结点数加一。
-    """
-
-    def get_leaf_num(self):
-        """method of getting leaf numbers of BiTree"""
-        if self.root is None:
-            return 0
-        else:
-            node_stack = list()
-            node = self.root
-            leaf_numbers = 0
-            # only node exists and stack is not empty that will do this circulation
-            while node is not None or len(node_stack):
-                if node is None:
-                    """node is None then pop the stack and get the node.right"""
-                    node = node_stack.pop().right
-                    continue
-                while node.left is not None:
-                    node_stack.append(node)
-                    node = node.left
-                # if there is not  node.right, leaf_number add 1
-                node = node.right
-                if node is None:
-                    leaf_numbers += 1
-            return leaf_numbers
 
     # 两个节点的最近公共祖先
     def lowestCommonAncestor(self, root, p, q):
@@ -492,11 +417,12 @@ class BiTree:
     def reConstructBinaryTree(self, pre, tin):
         if not pre and not tin:
             return None
-        # 前序遍历的第一个是根节点
-        root = BiNode(pre[0])
+
         if set(pre) != set(tin):
             return None
 
+        # 前序遍历的第一个是根节点
+        root = BiNode(pre[0])
         i = tin.index(pre[0])
         # 左子树
         root.left = self.reConstructBinaryTree(pre[1:i + 1], tin[:i])

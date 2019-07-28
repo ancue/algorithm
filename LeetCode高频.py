@@ -30,16 +30,17 @@ def threeSum(nums):
         return []
     if len(nums) == 3 and sum(nums) == 0:
         return [sorted(nums)]
-
+    # 从小到大排序
     nums.sort()
     result, length = [], len(nums)
     for i in range(length - 2):
         if i > 0 and nums[i - 1] == nums[i]:
             continue
 
-        # i < l < r
+        # 从两端到中间
         l, r = i + 1, length - 1
         while l < r:
+            # 对于每一个元素，从两端到中间搜索和为0的组合
             sum = nums[i] + nums[l] + nums[r]
             if sum == 0:
                 result.append([nums[i], nums[l], nums[r]])
@@ -107,10 +108,10 @@ def maxProfit2(prices):
     b1 = b2 = -prices[0]
     s1 = s2 = 0
     for i in range(1, ls):
-        s2 = max(s2, b2 + prices[i])
-        b2 = max(b2, s1 - prices[i])
-        s1 = max(b1 + prices[i], s1)
-        b1 = max(b1, -prices[i])
+        b1 = max(b1, -prices[i]) # 手上的钱减去价钱，即为剩余
+        s1 = max(b1 + prices[i], s1) # 第一次卖掉，为剩余
+        b2 = max(b2, s1 - prices[i])    # 再买一次
+        s2 = max(s2, b2 + prices[i])    # 再卖一次
     return max(s1, s2)
 
 
@@ -206,13 +207,16 @@ def removeElement(nums, val):
 
 
 def maxSubArray(nums):
-    sum = 0
-    maxsum = -2 ** 31
+    if nums is None or len(nums) == 0:
+        return []
 
+    sum = 0
+    maxsum = nums[0]
     for i in range(len(nums)):
-        if sum < 0:
+        sum += nums[i]
+        # 元素可以为负，但是sum不能为负
+        if sum < 0 :
             sum = 0
-            sum += nums[i]
         maxsum = max(maxsum, sum)
     return maxsum
 
