@@ -12,9 +12,6 @@ class BiNode(object):
         self.left = left
         self.right = right
 
-    def get_element(self):
-        return self.element
-
     """
     将节点以字典的形式呈现
     """
@@ -227,7 +224,7 @@ class BiTree:
 
             # 到达左子树的底部
             while node.left:
-                node_stack.append(node.left)
+                node_stack.append(node)
                 output_list.append(node.val)
                 node = node.left
 
@@ -357,6 +354,7 @@ class BiTree:
         root.left, root.right = root.right, root.left
         self.inverseTree(root.left)
         self.inverseTree(root.right)
+        return root
 
     # 广度优先，层次遍历（递归）
     def levelTraversal(self, root, level):
