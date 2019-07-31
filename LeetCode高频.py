@@ -14,6 +14,7 @@ def twoSum(nums, target):
 
     return (-1, -1)
 
+
 print(twoSum([1, 4, 7, 9, 3], 7))
 
 # 三数之和
@@ -54,8 +55,8 @@ def threeSum(nums):
                 l += 1
     return result
 
-print(threeSum([1, 0, -1, 2, 3, -2]))
 
+print(threeSum([1, 0, -1, 2, 3, -2]))
 
 # 121. 股票最大利润
 """
@@ -71,8 +72,8 @@ def maxProfit1(prices):
         return 0
     max_profit, low = 0, prices[0]
     for i in range(1, length):
-        low = min(low,prices[i])
-        max_profit = max(max_profit,prices[i] - low)
+        low = min(low, prices[i])
+        max_profit = max(max_profit, prices[i] - low)
     return max_profit
 
 
@@ -104,10 +105,10 @@ def maxProfit2(prices):
     b1 = b2 = -prices[0]
     s1 = s2 = 0
     for i in range(1, ls):
-        b1 = max(b1, -prices[i]) # 手上的钱减去价钱，即为剩余
-        s1 = max(b1 + prices[i], s1) # 第一次卖掉，为剩余
-        b2 = max(b2, s1 - prices[i])    # 再买一次
-        s2 = max(s2, b2 + prices[i])    # 再卖一次
+        b1 = max(b1, -prices[i])  # 手上的钱减去价钱，即为剩余
+        s1 = max(b1 + prices[i], s1)  # 第一次卖掉，为剩余
+        b2 = max(b2, s1 - prices[i])  # 再买一次
+        s2 = max(s2, b2 + prices[i])  # 再卖一次
     return max(s1, s2)
 
 
@@ -115,6 +116,23 @@ def maxProfit2(prices):
 """
 输入字符串以字符数组 char[] 的形式给出。
 """
+
+
+def reverseStr(s):
+    if not isinstance(s, str) or len(s) < 2:
+        return [s]
+
+    length = len(s)
+    l, r = 0, length - 1
+    strlist = list(s)
+    while l < r:
+        strlist[l], strlist[r] = strlist[r], strlist[l]
+        l += 1
+        r -= 1
+    return strlist
+print('reverseStr')
+print(reverseStr('abc'))
+
 
 # 8. 字符串转整数
 """
@@ -152,6 +170,7 @@ def myAtoi(str):
         result = result * 10 + num
         pos += 1
     return sign * result
+
 
 # 26. 删除数组中重复的数
 """
@@ -209,10 +228,9 @@ def maxSubArray(nums):
     sum = 0
     maxsum = nums[0]
     for i in range(len(nums)):
-        sum += nums[i]
         # 元素可以为负，但是sum不能为负
-        if sum < 0 :
+        if sum < 0:
             sum = 0
+        sum += nums[i]
         maxsum = max(maxsum, sum)
     return maxsum
-

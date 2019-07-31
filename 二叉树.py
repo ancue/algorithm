@@ -63,89 +63,29 @@ class BiTree:
                     node_queue.append(q_node.left)
                     node_queue.append(q_node.right)
 
-    '''
-    dict_tree = {
-        "element": 0,
-        "left": {
-            "element": 1,
-            "left": {
-                "element": 3,
-                "left": 6,
-                "right": 7,
-            }
-        },
-        "right": {
-            "element": 2,
-            "left": 4,
-            "right": {
-                "element": 5,
-                "left": 8,
-                "right": 9,
-            },
-        },
-    }
-    '''
+    # 二叉树最小深度
+    def minDepth(self, root):
+        if not root:
+            return 0
+        if not root.left and not root.right:
+            return 1
 
-    # 从字典构造二叉树
-    def set_up_from_dict(self, dict_instance):
-        if not isinstance(dict_instance, dict):
-            return None
+        if not root.left or not root.right:
+            #  左子结点或右子结点存在，不存在的那一边就为0 了，选另一边 
+            return max(self.minDepth(root.left), self.minDepth(root.right)) + 1
         else:
-            dict_queue = list()
-            node_queue = list()
-            # 根节点
-            node = BiNode(dict_instance["element"])
-            self.root = node
-            node_queue.append(node)
-            dict_queue.append(dict_instance)
+            #  左右子结点都存在，选更浅的子树 
+            return min(self.minDepth(root.left), self.minDepth(root.right)) + 1
 
-            while len(dict_queue):
-                dict_in = dict_queue.pop(0)
-                node = node_queue.pop(0)
+    # 二叉树的最大深度
+    def maxDepth(self, root):
+        if root is None:
+            return 0
 
-                if isinstance(dict_in.get("left", None), (dict, int, float, str)):
-                    if isinstance(dict_in.get("left", None), dict):
-                        dict_queue.append(dict_in.get("left", None))
-                        left_node = BiNode(dict_in.get("left", None)["element"])
-                        node_queue.append(left_node)
-                    else:
-                        left_node = BiNode(dict_in.get("left", None))
-                    node.left = left_node
+        ltree = self.maxDepth(root.left)
+        rtree = self.maxDepth(root.right)
 
-                if isinstance(dict_in.get("right", None), (dict, int, float, str)):
-                    if isinstance(dict_in.get("right", None), dict):
-                        dict_queue.append(dict_in.get("right", None))
-                        right_node = BiNode(dict_in.get("right", None)["element"])
-                        node_queue.append(right_node)
-                    else:
-                        right_node = BiNode(dict_in.get("right", None))
-                    node.right = right_node
-
-    """
-        # 将二叉树转为字典
-        def pack_to_dict(self):
-            if self.root is None:
-                return None
-            else:
-                node_queue = list()
-                dict_queue = list()
-                node_queue.append(self.root)
-                dict_pack = self.root.dict_form()
-                dict_queue.append(dict_pack)
-    
-                while len(node_queue):
-                    q_node = node_queue.pop(0)
-                    dict_get = dict_queue.pop(0)
-                    if q_node.left is not None:
-                        node_queue.append(q_node.left)
-                        dict_get["left"] = q_node.left.dict_form()
-                        dict_queue.append(dict_get["left"])
-                    if q_node.right is not None:
-                        node_queue.append(q_node.right)
-                        dict_get["right"] = q_node.right.dict_form()
-                        dict_queue.append(dict_get["right"])
-            return dict_pack
-    """
+        return max(ltree, rtree) + 1
 
     """
     它是一棵空树或它的左右两个子树的高度差的绝对值不超过1，
@@ -182,6 +122,8 @@ class BiTree:
         # 从左到右，搜索值为差值的节点
         a = self.path(root.left, sum - root.val) + self.path(root.right, sum - root.val)
         return [[root.val] + i for i in a]
+
+
 
     """
     判断对称二叉树
@@ -377,29 +319,7 @@ class BiTree:
         r = self.lowestCommonAncestor(root.right, p, q)
         return root if l and r else l or r
 
-    # 二叉树最小深度
-    def minDepth(self, root):
-        if not root:
-            return 0
-        if not root.left and not root.right:
-            return 1
 
-        if not root.left or not root.right:
-            #  左子结点或右子结点存在，不存在的那一边就为0 了，选另一边 
-            return max(self.minDepth(root.left), self.minDepth(root.right)) + 1
-        else:
-            #  左右子结点都存在，选更浅的子树 
-            return min(self.minDepth(root.left), self.minDepth(root.right)) + 1
-
-    # 二叉树的最大深度
-    def maxDepth(self, root):
-        if root is None:
-            return 0
-
-        ltree = self.maxDepth(root.left)
-        rtree = self.maxDepth(root.right)
-
-        return max(ltree, rtree) + 1
 
     # 重建二叉树
     """
